@@ -1,28 +1,38 @@
 <img src="./images/logo.sample.png" alt="Logo of the project" align="right">
 
-# Name of the project &middot; [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)](https://travis-ci.org/npm/npm) [![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/npm) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/your/your-project/blob/master/LICENSE)
-> Additional information or tag line
+# ESUSU CONFAM LIMITED &middot; [![Build Status](https://img.shields.io/travis/npm/npm/latest.svg?style=flat-square)](https://travis-ci.org/npm/npm) [![npm](https://img.shields.io/npm/v/npm.svg?style=flat-square)](https://www.npmjs.com/package/npm) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/your/your-project/blob/master/LICENSE)
+> Assessment for a backend developer role
 
-A brief description of your project, what it is used for.
+Esusu Confam Ltd, a long-running Co-operative in Nigeria. Allows a group of users save a fixed amount automatically every week and then one of the members collects the money at the end of every month.
 
 ## Installing / Getting started
 
-A quick introduction of the minimal setup you need to get a hello world up &
-running.
+clone this repository and run the commands shown below 
 
 ```shell
-commands here
+ npm install
 ```
 
-Here you should say what actually happens when you execute the code above.
+install all dependencies to run project successfully
+
+```shell
+ npm start
+```
+
+to start running the project
 
 ## Developing
 
 ### Built With
-List main libraries, frameworks used including versions (React, Angular etc...)
+- nodejs
+- express
+- jwt
 
 ### Prerequisites
-What is needed to set up the dev environment. For instance, global dependencies or any other tools. include download links.
+-
+-
+-
+-
 
 
 ### Setting up Dev
@@ -31,12 +41,12 @@ Here's a brief intro about what a developer must do in order to start developing
 the project further:
 
 ```shell
-git clone https://github.com/your/your-project.git
-cd your-project/
-packagemanager install
+https://github.com/Kaydayo/ESUSU-CONFAM_LTD.git
+cd ESUSU-CONFAM_LTD
+npm install
 ```
 
-And state what happens step-by-step. If there is any virtual environment, local server or database feeder needed, explain here.
+--
 
 ### Building
 
