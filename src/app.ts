@@ -3,14 +3,20 @@ import express, {Request, Response, NextFunction} from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import dotenv from 'dotenv'
 
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
+import {connectDB, connectTestDB} from './db/connect';
+
+dotenv.config();
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+
+app.engine('jade', require('jade').renderFile)
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
@@ -18,6 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+if (process.env.NODE_ENV === "test") {
+  connectTestDB();
+} else {
+  //connect db
+  connectDB();
+}
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -34,8 +47,7 @@ app.use(function(err:HttpError, req: Request, res: Response, next: NextFunction)
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json({status:"error", message: err.message});
 });
 
 export default app;
