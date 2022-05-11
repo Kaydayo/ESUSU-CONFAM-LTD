@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../dist/app').default;
 var debug = require('debug')('esusu-confam-ltd:server');
 var http = require('http');
 
@@ -25,7 +25,9 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, () => {
+  console.log(`%c 💡 Server is listening on port ${port}`, 'color: #2595FB, background: #222')
+});
 server.on('error', onError);
 server.on('listening', onListening);
 
