@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import dotenv from 'dotenv'
 
-import indexRouter from './routes/index';
+import groupRouter from './routes/groups';
 import usersRouter from './routes/users';
 import {connectDB, connectTestDB} from './db/connect';
 
@@ -32,8 +32,9 @@ if (process.env.NODE_ENV === "test") {
   connectDB();
 }
 
-app.use('/', indexRouter);
+
 app.use('/users', usersRouter);
+app.use('/groups', groupRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

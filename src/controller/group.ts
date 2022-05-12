@@ -3,16 +3,16 @@ import Group from "../model/groupModel"
 
 
 
-export const createGroup = async (req: Request, res: Response) => {
+export const createGroupPref = async (req: Request, res: Response) => {
     try {
-        const existingGroupName = await Group.findOne({groupName: req.body.groupName})
+        const existingGroupName = await Group.findOne({groupName: req.body.groupName.toLowerCase()})
         if (existingGroupName) {
             return res.status(400).json({
                 status:"failed",
                 message: "group name already exist"
             })
         }
-        const newGroup = await Group.create({...req.body})
+        const newGroup = await Group.create({...req.body, members: [req.user], adminId: req.user.id, groupName: req.body.groupName.toLowerCase()})
         if (!newGroup) {
             return res.status(400).json({
                 status: "failed",
@@ -21,6 +21,7 @@ export const createGroup = async (req: Request, res: Response) => {
         }
         res.status(201).json({
             status: "success",
+            payload: newGroup,
             message: `${req.body.groupName} was created successfully`
         })
     } catch (err) {
@@ -28,6 +29,29 @@ export const createGroup = async (req: Request, res: Response) => {
         res.status(400).send("invalid");
     }
 };
+
+export const startSavingGroup = async (req: Request, res: Response) => {
+    try {
+        const findGroup = await Group.findOne({_id: req.body.id})
+        
+        if (!findGroup) {
+            return res.status(400).json({
+                status: "failed",
+                message: "sorry! the group specified does not exist "
+            })
+        }
+
+        if (findGroup.members!.length !== findGroup.maximumCapacity) {
+            return res.status(400).json({
+                status: "failed",
+                message: `group savings cannot start, ${findGroup.maximumCapacity - findGroup.members?.length} more members needed`
+            })
+        }
+        
+    } catch (err){
+        
+    }
+}
 
 
 

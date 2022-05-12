@@ -27,12 +27,15 @@ export const validateLogin = (person: login) => {
     return schema.validate(person);
 };
 
-export const validateGroup = (group: IGroup) => {
+export const validateGroupPref = (group:Partial<IGroup>) => {
     const schema = Joi.object({
         groupName: Joi.string().required(),
-        savingsAmount: Joi.string().required(),
-        
-    })
+        groupDescription: Joi.string().required(),
+        maximumCapacity: Joi.number().required(),
+        isSearch: Joi.boolean().required(),
+        payingAmount: Joi.number().required()
+    });
+    return schema.validate(group)
 
 }
 

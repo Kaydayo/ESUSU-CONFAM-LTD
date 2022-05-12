@@ -18,22 +18,24 @@ const groupSchema = new mongoose.Schema({
     },
 
     payingAmount: {
-        type: String, required: [true, 'Please provide saving amount']
+        type: Number, required: [true, 'Please provide saving amount']
     },
 
     maximumCapacity: {
         type: Number
     },
 
-    savingsAmount: {
-        type: String
+    payoutAmount: {
+        type: Number
     },
 
     isSearch: {
         type: Boolean
     },
 
-    members: [{type: Schema.Types.ObjectId, ref: 'User'}]
+    members: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    
+    adminId: String
 },
 
     {

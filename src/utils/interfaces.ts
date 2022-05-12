@@ -23,10 +23,11 @@ export interface login {
 
 export interface IGroup {
     groupName: string;
-    payingAmount?: string;
+    payingAmount?: number;
     maximumCapacity: number;
     members?: User[];
     groupDescription: string;
-    savingsAmount: string;
+    payoutAmount: number;
     isSearch: boolean;
+    adminId: string;
 }
