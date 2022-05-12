@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { User,login} from "../interfaces";
+import { User,login, IGroup} from "../interfaces";
 
 
 
@@ -26,4 +26,13 @@ export const validateLogin = (person: login) => {
     });
     return schema.validate(person);
 };
+
+export const validateGroup = (group: IGroup) => {
+    const schema = Joi.object({
+        groupName: Joi.string().required(),
+        savingsAmount: Joi.string().required(),
+        
+    })
+
+}
 

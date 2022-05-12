@@ -20,3 +20,13 @@ export interface login {
     email: string;
     password: string;
 }
+
+export interface IGroup {
+    groupName: string;
+    payingAmount?: string;
+    maximumCapacity: number;
+    members?: User[];
+    groupDescription: string;
+    savingsAmount: string;
+    isSearch: boolean;
+}

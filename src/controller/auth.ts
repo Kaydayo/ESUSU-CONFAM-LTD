@@ -2,9 +2,10 @@ import {Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../model/userModel";
+import {ObjectId} from "mongoose";
 
 const generateToken = (userId: string, email: string) => {
-    const token = jwt.sign({email, user:userId}, process.env.JWT_SECRET as string, {
+    const token = jwt.sign({email}, process.env.JWT_SECRET as string, {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
     return token;
@@ -49,7 +50,7 @@ export const logins = async (req: Request, res: Response) => {
 
         //check if user's password is correct by using bycrypt.compare
 
-        const match = await bcrypt.compare(req.body.password, existingUser.password);
+        const match = await bcrypt.compare(req.body.password, existingUser!.password);
 
         if (!match) {
             return res.status(400).json({
@@ -57,7 +58,7 @@ export const logins = async (req: Request, res: Response) => {
             });
         }
 
-        const token = generateToken(existingUser.userId, existingUser.email);
+        const token = generateToken(existingUser.userId, existingUser!.email);
 
         res.status(201).json({
             status: "success",
