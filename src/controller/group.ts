@@ -34,7 +34,12 @@ export const createGroupPref = async (req: Request, res: Response) => {
 export const startSavingGroup = async (req: Request, res: Response) => {
     try {
         const findGroup = await Group.findOne({_id: req.params.id})
-
+        if (req.user.id !== findGroup?.adminId) {
+            return res.status(400).json({
+                status: "failed",
+                message: "sorry! only admins can start group "
+            })
+        }
         if (!findGroup) {
             return res.status(400).json({
                 status: "failed",
@@ -67,7 +72,7 @@ export const startSavingGroup = async (req: Request, res: Response) => {
 
 export const searchGroup = async (req: Request, res: Response) => {
     try {
-        const getGroup = await Group.findOne({groupName: req.body.groupName.toLowerCase()})
+        const getGroup = await Group.findOne({groupName: req?.query?.search})
         if (!getGroup || !getGroup.isSearch) {
             return res.status(400).json({
                 status: "failed",
@@ -154,6 +159,12 @@ export const genGroupInvite = async (req: Request, res: Response) => {
 export const addMember = async (req: Request, res: Response) => {
     try {
         const findGroup = await Group.findOne({_id: req.body.groupId})
+        if (findGroup?.adminId !== req.user) {
+            return res.status(400).json({
+                status: "failed",
+                message: "only admin can add members"
+            })
+        }
         if (!findGroup) {
             return res.status(400).json({
                 status: "failed",
@@ -165,7 +176,7 @@ export const addMember = async (req: Request, res: Response) => {
         return res.status(200).json({
             status: "success",
             payload: result,
-            message: `added a member to ${findGroup.groupName} successfully`
+            message: `added a member to ${findGroup?.groupName} successfully`
         })
 
     } catch (error) {
@@ -173,7 +184,7 @@ export const addMember = async (req: Request, res: Response) => {
     }
 }
 
-export const joinAGrop = async (req: Request, res: Response) => {
+export const joinAGroup = async (req: Request, res: Response) => {
     const findGroup = await Group.findOne({_id: req.params.id})
     if (!findGroup) {
         return res.status(400).json({
@@ -181,7 +192,8 @@ export const joinAGrop = async (req: Request, res: Response) => {
             message: "unable to fetch group details"
         })
     }
-    const result = await Group.findOneAndUpdate({_id: req.body.groupId}, findGroup, {new: true})
+    findGroup?.members?.push({_id: req.user})
+    const result = await Group.findOneAndUpdate({_id: req.params.id}, findGroup, {new: true})
     return res.status(200).json({
         status: "success",
         payload: result,
