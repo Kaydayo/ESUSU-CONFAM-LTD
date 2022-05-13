@@ -1,5 +1,6 @@
 import {Request, Response, NextFunction} from "express";
 import Group from "../model/groupModel"
+import {ActiveInactive} from "../utils/interfaces";
 
 
 
@@ -44,9 +45,18 @@ export const startSavingGroup = async (req: Request, res: Response) => {
         if (findGroup.members!.length !== findGroup.maximumCapacity) {
             return res.status(400).json({
                 status: "failed",
-                message: `group savings cannot start, ${findGroup.maximumCapacity - findGroup.members?.length} more members needed`
+                message: `group savings cannot start, ${findGroup.maximumCapacity - findGroup.members!.length} more members needed`
             })
         }
+
+        findGroup.hasBegin = ActiveInactive.ACTIVE
+        const result = await Group.findOneAndUpdate({_id: req.body.id}, findGroup, {new: true})
+        
+        return res.status(200).json({
+            status: "success",
+            payload: result,
+            message: `${result?.groupName} group savings started!`
+        })
         
     } catch (err){
         

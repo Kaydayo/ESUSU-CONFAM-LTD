@@ -33,6 +33,16 @@ const groupSchema = new mongoose.Schema({
         type: Boolean
     },
 
+    hasBegin: {
+        type: String,
+        enum: ["active", "inactive"],
+        default: "inactive"
+    },
+
+    link: {
+        type: String
+    },
+
     members: [{type: Schema.Types.ObjectId, ref: 'User'}],
     
     adminId: String

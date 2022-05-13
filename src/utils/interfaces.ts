@@ -29,5 +29,12 @@ export interface IGroup {
     groupDescription: string;
     payoutAmount: number;
     isSearch: boolean;
+    hasBegin: ActiveInactive.ACTIVE | ActiveInactive.INACTIVE;
     adminId: string;
+    link: string;
+}
+
+export enum ActiveInactive {
+    ACTIVE = "active",
+    INACTIVE = "inactive"
 }
