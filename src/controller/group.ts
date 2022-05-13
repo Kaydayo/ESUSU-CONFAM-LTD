@@ -33,7 +33,7 @@ export const createGroupPref = async (req: Request, res: Response) => {
 
 export const startSavingGroup = async (req: Request, res: Response) => {
     try {
-        const findGroup = await Group.findOne({_id: req.body.id})
+        const findGroup = await Group.findOne({_id: req.params.id})
 
         if (!findGroup) {
             return res.status(400).json({
@@ -187,7 +187,4 @@ export const joinAGrop = async (req: Request, res: Response) => {
         payload: result,
         message: `a member joined ${findGroup.groupName} successfully, via i=nvite link`
     }) 
-
-
-
 }

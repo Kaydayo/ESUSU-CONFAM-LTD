@@ -36,6 +36,23 @@ export const validateGroupPref = (group:Partial<IGroup>) => {
         payingAmount: Joi.number().required()
     });
     return schema.validate(group)
-
 }
+
+export const validateSearchGroup = (group: Partial<IGroup>) => {
+    const schema = Joi.object({
+        groupName: Joi.string().required(),
+    });
+    return schema.validate(group)
+}
+
+export const validateAddMember = (member: Partial<IGroup>) => {
+    const schema = Joi.object({
+        groupId: Joi.string().required(),
+        userId: Joi.string().required(),
+    });
+    return schema.validate(member)
+}
+
+
+
 
