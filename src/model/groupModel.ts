@@ -43,7 +43,7 @@ const groupSchema = new mongoose.Schema({
         type: String
     },
 
-    members: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    members: [{ref: {type: Schema.Types.ObjectId, ref: 'User'}, amountPaid:{type:Number, default: 0}}],
     
     adminId: String
 },

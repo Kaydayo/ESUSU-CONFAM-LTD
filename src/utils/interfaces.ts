@@ -7,6 +7,7 @@ export interface User {
     email: string;
     phoneNo: number;
     password: string;
+    wallet?: number;
 }
 
 export interface sign {
@@ -23,9 +24,9 @@ export interface login {
 
 export interface IGroup {
     groupName: string;
-    payingAmount?: number;
+    payingAmount: number;
     maximumCapacity: number;
-    members?: User[];
+    members?: {_id:User, amountPaid?:number}[];
     groupDescription: string;
     payoutAmount: number;
     isSearch: boolean;

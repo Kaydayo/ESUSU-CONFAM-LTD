@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please provide password']
     },
 
+    wallet: {
+        type: Number
+    }
+
 
 },
 
