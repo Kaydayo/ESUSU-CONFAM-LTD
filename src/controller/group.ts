@@ -73,7 +73,7 @@ export const startSavingGroup = async (req: Request, res: Response) => {
 
 export const searchGroup = async (req: Request, res: Response) => {
     try {
-       
+
         const getGroup = await Group.findOne({groupName: req?.query?.search})
         if (!getGroup || !getGroup.isSearch) {
             return res.status(400).json({
@@ -208,4 +208,35 @@ export const joinAGroup = async (req: Request, res: Response) => {
         payload: result,
         message: `a member joined ${findGroup.groupName} successfully, via invite link`
     })
+}
+
+export const payToGroup = async (req: Request, res: Response) => {
+    try {
+        const findGroup = await Group.findOne({_id: req.body.groupId})
+        if (!findGroup) {
+            return res.status(400).json({
+                status: "failed",
+                message: "unable to fetch group details"
+            })
+        }
+        const resGroup = await Group.findOneAndUpdate(
+            {'members.id': req.user.id},
+            {
+                $inc: {'members.$.amount': req.body.amount}
+            }
+        )
+        if (!resGroup) {
+            return res.status(400).json({
+                status: "failed",
+                message: "an unexpected error occurred"
+            })
+        }
+        return res.status(400).json({
+            status: "success",
+            message: `successfully contributed ${req.body.amount} into ${findGroup.groupName} group `
+        })
+    } catch (error) {
+        
+    }
+
 }

@@ -6,12 +6,11 @@ import {validateUser, validateLogin, validateFundWallet} from '../utils/validati
 var router = express.Router();
 
 /* GET users listing. */
-
-router.get('/balance', protectRoute, getBalance)
-
 router.post('/signup', [validateMiddleware(validateUser)], signup)
 router.post('/login', [validateMiddleware(validateLogin)], logins)
 router.post('/fundmywallet', protectRoute, [validateMiddleware(validateFundWallet)], fundMyWallet)
+
+router.get('/balance', protectRoute, getBalance)
 
 
 
