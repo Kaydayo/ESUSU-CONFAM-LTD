@@ -30,9 +30,9 @@ export const signup = async (req: Request, res: Response) => {
             message: "Signup successful",
             data: {token, user, password: "*********"},
         });
-    } catch (err) {
+    } catch (err: any) {
         console.log(err);
-        res.status(400).send("invalid");
+        res.status(400).send({status: "failed", message: err.message});
     }
 };
 
@@ -60,7 +60,7 @@ export const logins = async (req: Request, res: Response) => {
 
         const token = generateToken(existingUser.userId, existingUser!.email);
 
-        res.status(201).json({
+        return res.status(201).json({
             status: "success",
             message: "login successful",
             data: {token},
@@ -72,6 +72,49 @@ export const logins = async (req: Request, res: Response) => {
     }
 
 };
+
+export const fundMyWallet = async (req: Request, res: Response) => {
+    try {
+        const findMe = await User.findOne({_id: req.user.id})
+        if (!findMe) {
+            return res.status(400).json({
+                status: "failed",
+                message: "can't identify user"
+            });
+        }
+        findMe.wallet = findMe.wallet + req.body.amount
+        const result = await User.findOneAndUpdate({_id: req.user.id}, findMe, {new: true})
+        return res.status(200).json({
+            status: "success",
+            message: "your balance has been updated",
+            payload: findMe.wallet
+        })
+    } catch (error: any) {
+        res.status(400).json({status: "failed", message: error.message});
+
+    }
+}
+
+export const getBalance = async (req: Request, res: Response) => {
+    try {
+        const findMe = await User.findOne({_id: req.user.id})
+        if (!findMe) {
+            return res.status(400).json({
+                status: "failed",
+                message: "can't identify user"
+            });
+        }
+
+        return res.status(200).json({
+            status: "success",
+            message: "your balance has been retrieved",
+            payload: {balance: findMe.wallet}
+        })
+    } catch (error: any) {
+        res.status(400).json({status: "failed", message: error.message});
+
+    }
+}
 
 
 export const protectRoute = async (

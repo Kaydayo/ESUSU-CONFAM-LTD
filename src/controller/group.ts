@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import Group from "../model/groupModel"
 import {ActiveInactive} from "../utils/interfaces";
+import {nanoid} from 'nanoid';
 
 
 
@@ -13,7 +14,7 @@ export const createGroupPref = async (req: Request, res: Response) => {
                 message: "group name already exist"
             })
         }
-        const newGroup = await Group.create({...req.body, members: [req.user], adminId: req.user.id, groupName: req.body.groupName.toLowerCase()})
+        const newGroup = await Group.create({...req.body, members: [req.user], adminId: req.user.id, link: nanoid(), groupName: req.body.groupName.toLowerCase()})
         if (!newGroup) {
             return res.status(400).json({
                 status: "failed",
@@ -72,6 +73,7 @@ export const startSavingGroup = async (req: Request, res: Response) => {
 
 export const searchGroup = async (req: Request, res: Response) => {
     try {
+       
         const getGroup = await Group.findOne({groupName: req?.query?.search})
         if (!getGroup || !getGroup.isSearch) {
             return res.status(400).json({
@@ -147,7 +149,7 @@ export const genGroupInvite = async (req: Request, res: Response) => {
         }
         return res.status(200).json({
             status: "success",
-            payload: findGroup.link,
+            payload: `http://localhost:3000/groups/joinagroup/${findGroup.link}`,
             message: "group invite link retrieved successfully"
         })
     } catch (err) {
@@ -159,7 +161,7 @@ export const genGroupInvite = async (req: Request, res: Response) => {
 export const addMember = async (req: Request, res: Response) => {
     try {
         const findGroup = await Group.findOne({_id: req.body.groupId})
-        if (findGroup?.adminId !== req.user) {
+        if (findGroup?.adminId !== req.user.id) {
             return res.status(400).json({
                 status: "failed",
                 message: "only admin can add members"
@@ -171,7 +173,7 @@ export const addMember = async (req: Request, res: Response) => {
                 message: "unable to fetch group details"
             })
         }
-        findGroup?.members?.push({_id: req.body.userId})
+        findGroup?.members?.push(req.body.userId)
         const result = await Group.findOneAndUpdate({_id: req.body.groupId}, findGroup, {new: true})
         return res.status(200).json({
             status: "success",
@@ -180,23 +182,30 @@ export const addMember = async (req: Request, res: Response) => {
         })
 
     } catch (error) {
-        
+
     }
 }
 
 export const joinAGroup = async (req: Request, res: Response) => {
-    const findGroup = await Group.findOne({_id: req.params.id})
+    const findGroup = await Group.findOne({link: req.params.id})
+    console.log(findGroup)
     if (!findGroup) {
         return res.status(400).json({
             status: "failed",
             message: "unable to fetch group details"
         })
     }
-    findGroup?.members?.push({_id: req.user})
-    const result = await Group.findOneAndUpdate({_id: req.params.id}, findGroup, {new: true})
+    if (findGroup.adminId === req.user.id) {
+        return res.status(400).json({
+            status: "failed",
+            message: "Admin is a already member "
+        })
+    }
+    findGroup?.members?.push(req.user)
+    const result = await Group.findOneAndUpdate({link: req.params.id}, findGroup, {new: true})
     return res.status(200).json({
         status: "success",
         payload: result,
-        message: `a member joined ${findGroup.groupName} successfully, via i=nvite link`
-    }) 
+        message: `a member joined ${findGroup.groupName} successfully, via invite link`
+    })
 }

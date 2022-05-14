@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { User,login, IGroup} from "../interfaces";
+import {User, login, IGroup} from "../interfaces";
 
 
 
@@ -27,7 +27,7 @@ export const validateLogin = (person: login) => {
     return schema.validate(person);
 };
 
-export const validateGroupPref = (group:Partial<IGroup>) => {
+export const validateGroupPref = (group: Partial<IGroup>) => {
     const schema = Joi.object({
         groupName: Joi.string().required(),
         groupDescription: Joi.string().required(),
@@ -51,6 +51,13 @@ export const validateAddMember = (member: Partial<IGroup>) => {
         userId: Joi.string().required(),
     });
     return schema.validate(member)
+}
+
+export const validateFundWallet = (wallet: Partial<IGroup>) => {
+    const schema = Joi.object({
+        amount: Joi.number().required().greater(0),
+    });
+    return schema.validate(wallet)
 }
 
 

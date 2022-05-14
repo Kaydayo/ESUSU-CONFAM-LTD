@@ -1,8 +1,8 @@
 import express from 'express';
-import {addMember, createGroupPref, genGroupInvite, getALlPublicGroups, getMemberPay, joinAGrop, searchGroup, startSavingGroup} from '../controller/group';
+import {addMember, createGroupPref, genGroupInvite, getALlPublicGroups, getMemberPay, joinAGroup, searchGroup, startSavingGroup} from '../controller/group';
 import validateMiddleware from '../middleware/validateMiddleware';
-import {validateGroupPref} from '../utils/validations/validation';
-import {protectRoute} from '../controller/auth';
+import {validateAddMember, validateFundWallet, validateGroupPref} from '../utils/validations/validation';
+import {fundMyWallet, protectRoute} from '../controller/auth';
 
 var router = express.Router();
 
@@ -17,11 +17,13 @@ router.get('/searchgroup', protectRoute, searchGroup)
 
 router.get('/startgroupsavings/:id', protectRoute, startSavingGroup)
 
-router.post('/joinagroup', protectRoute, joinAGroup)
+router.get('/joinagroup/:id', protectRoute, joinAGroup)
 
-router.post('/addmember',protectRoute, [validateMiddleware(validateGroupPref)], addMember)
+router.post('/addmember',protectRoute, [validateMiddleware(validateAddMember)], addMember)
 
 router.post('/grouppreference', protectRoute, [validateMiddleware(validateGroupPref)], createGroupPref)
+
+
 
 
 
