@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, {Schema} from 'mongoose'
 import Joi from 'joi';
 import validator from 'validator';
 import { User } from '../utils/interfaces';
@@ -38,7 +38,13 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Please provide password']
+    },
+
+    wallet: {
+        type: Number
     }
+
+
 },
 
     {

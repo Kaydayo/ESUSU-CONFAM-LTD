@@ -7,6 +7,7 @@ export interface User {
     email: string;
     phoneNo: number;
     password: string;
+    wallet?: number;
 }
 
 export interface sign {
@@ -19,4 +20,22 @@ export interface sign {
 export interface login {
     email: string;
     password: string;
+}
+
+export interface IGroup {
+    groupName: string;
+    payingAmount: number;
+    maximumCapacity: number;
+    members?: {_id:User, amountPaid?:number}[];
+    groupDescription: string;
+    payoutAmount: number;
+    isSearch: boolean;
+    hasBegin: ActiveInactive.ACTIVE | ActiveInactive.INACTIVE;
+    adminId: string;
+    link: string;
+}
+
+export enum ActiveInactive {
+    ACTIVE = "active",
+    INACTIVE = "inactive"
 }

@@ -2,9 +2,10 @@ import {Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../model/userModel";
+import {ObjectId} from "mongoose";
 
 const generateToken = (userId: string, email: string) => {
-    const token = jwt.sign({email, user:userId}, process.env.JWT_SECRET as string, {
+    const token = jwt.sign({email}, process.env.JWT_SECRET as string, {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
     return token;
@@ -29,9 +30,9 @@ export const signup = async (req: Request, res: Response) => {
             message: "Signup successful",
             data: {token, user, password: "*********"},
         });
-    } catch (err) {
+    } catch (err: any) {
         console.log(err);
-        res.status(400).send("invalid");
+        res.status(400).send({status: "failed", message: err.message});
     }
 };
 
@@ -49,7 +50,7 @@ export const logins = async (req: Request, res: Response) => {
 
         //check if user's password is correct by using bycrypt.compare
 
-        const match = await bcrypt.compare(req.body.password, existingUser.password);
+        const match = await bcrypt.compare(req.body.password, existingUser!.password);
 
         if (!match) {
             return res.status(400).json({
@@ -57,20 +58,63 @@ export const logins = async (req: Request, res: Response) => {
             });
         }
 
-        const token = generateToken(existingUser.userId, existingUser.email);
+        const token = generateToken(existingUser.userId, existingUser!.email);
 
-        res.status(201).json({
+        return res.status(201).json({
             status: "success",
             message: "login successful",
             data: {token},
         });
     }
-    catch (err) {
+    catch (err: any) {
         console.log(err);
-        res.status(400).send("invalid");
+        res.status(400).send({status: "failed", message: err.message});
     }
 
 };
+
+export const fundMyWallet = async (req: Request, res: Response) => {
+    try {
+        const findMe = await User.findOne({_id: req.user.id})
+        if (!findMe) {
+            return res.status(400).json({
+                status: "failed",
+                message: "can't identify user"
+            });
+        }
+        findMe.wallet = findMe.wallet + req.body.amount
+        const result = await User.findOneAndUpdate({_id: req.user.id}, findMe, {new: true})
+        return res.status(200).json({
+            status: "success",
+            message: "your balance has been updated",
+            payload: findMe.wallet
+        })
+    } catch (error: any) {
+        res.status(400).json({status: "failed", message: error.message});
+
+    }
+}
+
+export const getBalance = async (req: Request, res: Response) => {
+    try {
+        const findMe = await User.findOne({_id: req.user.id})
+        if (!findMe) {
+            return res.status(400).json({
+                status: "failed",
+                message: "can't identify user"
+            });
+        }
+
+        return res.status(200).json({
+            status: "success",
+            message: "your balance has been retrieved",
+            payload: {balance: findMe.wallet}
+        })
+    } catch (error: any) {
+        res.status(400).json({status: "failed", message: error.message});
+
+    }
+}
 
 
 export const protectRoute = async (
