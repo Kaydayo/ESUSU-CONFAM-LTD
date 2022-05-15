@@ -97,7 +97,8 @@ Explain your code style and show how to check it.
 
 ## Api Reference
 
-If the api is external, link to api documentation. If not describe your api including authentication methods as well as explaining all the endpoints with their required parameters.
+link to documentation below
+[postmanapidocumentation](https://documenter.getpostman.com/view/18656151/UyxjF6Sj)
 
 
 ## Database

@@ -45,7 +45,7 @@ export const validateSearchGroup = (group: Partial<IGroup>) => {
     return schema.validate(group)
 }
 
-export const validateAddMember = (member: Partial<IGroup>) => {
+export const validateAddMember = (member: any) => {
     const schema = Joi.object({
         groupId: Joi.string().required(),
         userId: Joi.string().required(),
@@ -53,13 +53,20 @@ export const validateAddMember = (member: Partial<IGroup>) => {
     return schema.validate(member)
 }
 
-export const validateFundWallet = (wallet: Partial<IGroup>) => {
+export const validateFundWallet = (wallet: any) => {
     const schema = Joi.object({
         amount: Joi.number().required().greater(0),
     });
     return schema.validate(wallet)
 }
 
+export const validatePayGroup = (pay: any) => {
+    const schema = Joi.object({
+        groupId: Joi.string().required(),
+        amount: Joi.number().required().greater(0)
+    });
+    return schema.validate(pay)
+}
 
 
 

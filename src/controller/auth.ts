@@ -66,9 +66,9 @@ export const logins = async (req: Request, res: Response) => {
             data: {token},
         });
     }
-    catch (err) {
+    catch (err: any) {
         console.log(err);
-        res.status(400).send("invalid");
+        res.status(400).send({status: "failed", message: err.message});
     }
 
 };

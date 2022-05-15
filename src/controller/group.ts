@@ -149,7 +149,9 @@ export const genGroupInvite = async (req: Request, res: Response) => {
         }
         return res.status(200).json({
             status: "success",
-            payload: `http://localhost:3000/groups/joinagroup/${findGroup.link}`,
+            payload: {
+                groupInfo: findGroup, inviteLink: `http://localhost:3000/groups/joinagroup/${findGroup.link}`
+            },
             message: "group invite link retrieved successfully"
         })
     } catch (err) {
@@ -187,27 +189,31 @@ export const addMember = async (req: Request, res: Response) => {
 }
 
 export const joinAGroup = async (req: Request, res: Response) => {
-    const findGroup = await Group.findOne({link: req.params.id})
-    console.log(findGroup)
-    if (!findGroup) {
-        return res.status(400).json({
-            status: "failed",
-            message: "unable to fetch group details"
+    try {
+        const findGroup = await Group.findOne({link: req.params.id})
+        console.log(findGroup)
+        if (!findGroup) {
+            return res.status(400).json({
+                status: "failed",
+                message: "unable to fetch group details"
+            })
+        }
+        if (findGroup.adminId === req.user.id) {
+            return res.status(400).json({
+                status: "failed",
+                message: "Admin is a already member "
+            })
+        }
+        findGroup?.members?.push(req.user)
+        const result = await Group.findOneAndUpdate({link: req.params.id}, findGroup, {new: true})
+        return res.status(200).json({
+            status: "success",
+            payload: result,
+            message: `a member joined ${findGroup.groupName} successfully, via invite link`
         })
+    } catch (error) {
+
     }
-    if (findGroup.adminId === req.user.id) {
-        return res.status(400).json({
-            status: "failed",
-            message: "Admin is a already member "
-        })
-    }
-    findGroup?.members?.push(req.user)
-    const result = await Group.findOneAndUpdate({link: req.params.id}, findGroup, {new: true})
-    return res.status(200).json({
-        status: "success",
-        payload: result,
-        message: `a member joined ${findGroup.groupName} successfully, via invite link`
-    })
 }
 
 export const payToGroup = async (req: Request, res: Response) => {
@@ -219,24 +225,23 @@ export const payToGroup = async (req: Request, res: Response) => {
                 message: "unable to fetch group details"
             })
         }
-        const resGroup = await Group.findOneAndUpdate(
-            {'members.id': req.user.id},
-            {
-                $inc: {'members.$.amount': req.body.amount}
-            }
-        )
-        if (!resGroup) {
+        if (req.body.amount !== findGroup.payingAmount) {
             return res.status(400).json({
                 status: "failed",
-                message: "an unexpected error occurred"
+                message: "see group info for correct paying amount"
             })
         }
+        const updatedGroup = await Group.updateOne({_id: req.body.groupId, 'members._id': req.user.id}, {$inc: {'members.$.amountPaid': req.body.amount}})
+        console.log(updatedGroup)
+        // const result = await Group.findOneAndUpdate({_id: req.body.groupId}, updatedGroup, {new: true})
+        // console.log(result)
         return res.status(400).json({
             status: "success",
             message: `successfully contributed ${req.body.amount} into ${findGroup.groupName} group `
         })
-    } catch (error) {
-        
+    } catch (error: any) {
+        res.status(400).send({status: "failed", message: error.message});
+
     }
 
 }
