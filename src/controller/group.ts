@@ -150,7 +150,7 @@ export const genGroupInvite = async (req: Request, res: Response) => {
         return res.status(200).json({
             status: "success",
             payload: {
-                groupInfo: findGroup, inviteLink: `http://localhost:3000/groups/joinagroup/${findGroup.link}`
+                groupInfo: findGroup, inviteLink: `${process.env.INVITE_LINK}/${findGroup.link}`
             },
             message: "group invite link retrieved successfully"
         })
