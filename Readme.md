@@ -75,4 +75,4 @@ Mongodb was setup fo this project
 
 ## Licensing
 
-State what the license is and how to find the text version of the license.
+MIT license
