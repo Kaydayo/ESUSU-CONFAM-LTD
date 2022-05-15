@@ -71,7 +71,7 @@ link to documentation below
 
 ## Database
 Mongodb was setup fo this project 
-![ESUSUDB]("./images/dbdesign.png") 
+<img src="./images/dbdesign.png" alt="esusu db image" align="center">
 
 ## Licensing
 
