@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "start:dev": "nodemon ./bin/www",
     "build": "yarn tsc",
-    "compile:watch": "yarn tsc -w"
+    "compile:watch": "yarn tsc -w",
+    "start:deploy":"npm start --watch"
   },
   "dependencies": {
     "@types/nanoid": "^3.0.0",
